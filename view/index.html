@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="lib/fullcalendar/lib/main.css">
+    <link rel="stylesheet" href="lib/bootstrap-5.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="lib/fullcalendar/lib/main.min.js"></script>
+    <script src="lib/bootstrap-5.0.2/js/bootstrap.bundle.min.js"></script>
+    <title>Test</title>
+</head>
+<body class="h-100">
+
+    <div class="row g-0 mt-3 me-3">
+        
+        <div id="sidebar" class="col-xl-2 d-none d-xl-block d-flex">
+
+            <div class="d-flex flex-column w-100 h-100 justify-content-center align-items-center">
+
+                <!-- <div id="my-calendars-field" class="accordion w-75">
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header" id="my-calendars">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#my-calendars-collapse" aria-expanded="true" aria-controls="my-calendars-collapse">
+                                我的日曆
+                            </button>
+                        </h2>
+                        <div id="my-calendars-collapse" class="accordion-collapse collapse show" aria-labelledby="my-calendars">
+                            <div class="accordion-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="check-1-1">
+                                    <label class="form-check-label" for="check-1-1">
+                                        黑客松
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="accordion-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="check-1-2">
+                                    <label class="form-check-label" for="check-1-2">
+                                        實習
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="accordion-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="check-1-3">
+                                    <label class="form-check-label" for="check-1-3">
+                                        打工
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div id="other-calendars" class="accordion w-75">
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header" id="other-calendars">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#other-calendars-collapse" aria-expanded="true" aria-controls="other-calendars-collapse">
+                                活動
+                            </button>
+                        </h2>
+                        <div id="other-calendars-collapse" class="accordion-collapse collapse show" aria-labelledby="other-calendars">
+                            <div class="accordion-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="check-2-1">
+                                    <label class="form-check-label" for="check-2-1">
+                                        室內活動
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="accordion-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="check-2-2">
+                                    <label class="form-check-label" for="check-2-2">
+                                        農務
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    
+        <div id='calendar' class="col-xl-10 col-lg-12"></div>
+
+    </div>
+    
+    <div id="event-modal" class="d-none">
+        <div id="event-modal-card" class="card">
+            <div class="card-header">
+                <h3 id="event-header-text">
+                    和 Annie打網球
+                </h3>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"></h5>
+                <p class="card-text">
+                    <div id="modal-people">
+                        <i class="bi bi-people"></i>
+                        <span id="modal-people-text" class="ps-3 px-5">
+                            annie@weatherhackthon.tw
+                        </span>
+                    </div>
+                    <div id="modal-location">
+                        <i class="bi bi-geo-alt"></i>
+                        <span id="modal-location-text" class="ps-3 px-5">
+                            台北市松山區
+                        </span>
+                    </div>
+                    <div id="modal-detail">
+                        <i class="bi bi-list"></i>
+                        <span id="modal-detail-text" class="ps-3 px-5">
+                            BLA
+                        </span>
+                    </div>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+        });
+  
+    </script>
+
+    <script>
+        
+        let requestURL = 'http://localhost:5000';
+
+        const eventModal = document.getElementById('event-modal');
+        const eventModalCard = document.getElementById('event-modal-card');
+
+        async function getCalendar(url){
+            try {
+                let response = await fetch(url);
+                let data = await response.json();
+
+                data = data.data;
+
+                configs = {
+                    events: [],
+                    height: window.innerHeight*0.85,
+                    themeSystem: 'bootstrap5',
+                    displayEventTime: false,
+                    customButtons: {
+                        bell: {}
+                    },
+                    buttonIcons: {
+                        prev: 'chevron-left',
+                        next: 'chevron-right',
+                        bell: 'bell'
+                    },
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'bell'
+                    },
+                    eventMouseEnter: (info) => {
+
+                        eventModal.innerHTML = `
+                        <div id="event-modal-card" class="card">
+                            <div class="card-header">
+                                <h3 id="event-header-text">
+                                    ${info.event.title}
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text">
+                                    <div id="modal-location">
+                                        <i class="bi bi-geo-alt"></i>
+                                        <span id="modal-location-text" class="ps-3 px-5">
+                                            ${info.event.extendedProps[0].location}
+                                        </span>
+                                    </div>
+                                    <div id="modal-detail">
+                                        <i class="bi bi-list"></i>
+                                        <span id="modal-detail-text" class="ps-3 px-5">
+                                            BLA
+                                        </span>
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                        `
+
+                        eventModal.classList.remove('d-none');
+                    },
+                    eventMouseLeave: (info) => {
+                        eventModal.classList.add('d-none');
+                    }
+                };
+
+                index = 0
+                data.forEach(event => {
+                    element = {};
+
+                    let TARGET_LIST = ['DTSTART', 'DTEND', 'LOCATION', 'DESCRIPTION'];
+
+                    TARGET_LIST.forEach(e => {
+                        if (event[e] == undefined){
+                            event[e] = [null];
+                        }
+                    });
+
+                    TARGET_LIST = ['DTSTART;VALUE=DATE', 'DTEND;VALUE=DATE'];
+
+                    TARGET_LIST.forEach(e => {
+                        if (event[e] != undefined){
+                            event[e.split(';')[0]] = event[e];
+                        }
+                    })
+
+                    element['id'] = index;
+                    element['title'] = event.SUMMARY[0];
+                    element['start'] = event.DTSTART[0];
+                    element['end'] = event.DTEND[0];
+                    element['description'] = event.DESCRIPTION[0];
+                    element['extendedProps'] = [
+                        {
+                            "location": event.LOCATION[0]
+                        }
+                    ];
+
+                    configs['events'].push(element);
+
+                    index += 1;
+                });
+
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, configs);
+
+                calendar.render();
+                
+                return data[data];
+            } catch(error) {
+                console.log(`Error: ${error}`);
+            }
+        }
+
+        getCalendar(requestURL);
+
+        document.addEventListener('mousemove', function(e) {
+
+            let eventModalCard = document.getElementById('event-modal-card');
+            let left = e.clientX;
+            let top = e.clientY;
+            eventModalCard.style.left = left + 1 + 'px';
+            eventModalCard.style.top = top + 1 + 'px';
+            
+            if (e.clientX + eventModal.offsetWidth + 10 >= window.innerWidth){
+                eventModal.style.left -= `${eventModal.style.width}`;
+            }
+
+            if (e.clientY + eventModal.offsetHeight + 10 >= window.innerHeight){
+                eventModal.style.left -= `${eventModal.style.height}`;
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>

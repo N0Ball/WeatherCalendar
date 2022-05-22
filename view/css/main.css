@@ -1,0 +1,16 @@
+.btn-primary {
+    background-color: transparent;
+    border-color: transparent;
+    color: #b3b4b4;
+}
+
+.fc-daygrid-event {
+    font-size: .85rem;
+}
+
+#event-modal-card {
+    width: auto;
+    height: auto;
+    position: absolute;
+    z-index: 999;
+}
