@@ -72,6 +72,7 @@ class Temperature:
             result = json.dumps({'max': max(values), 'min': min(values)})
         else:   # Missing Value
             result = json.dumps({'max': 'NA', 'min': 'NA'})
+        
         return result
 
     def __T_diff(self, end_time:str):

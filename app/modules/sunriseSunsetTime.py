@@ -43,4 +43,5 @@ class SunriseSunsetTime(Temperature):
             # set_time = []
             if not set_time: set_time = 'NA'
             result.append({'datetime':datetime, 'rise_time':rise_time, 'set_time':set_time})
+        
         return json.dumps(result,ensure_ascii=False)
