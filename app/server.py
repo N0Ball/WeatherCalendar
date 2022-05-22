@@ -44,46 +44,81 @@ from .modules.temperature import Temperature
 def temperature(city, town, start_time, end_time):
 
     field = Temperature()
-    return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    try:
+        return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    except ValueError as e:
+        return {
+            'error': str(e)
+        }
 
 from .modules.preciptitationProbability import PrecipitationProbability
 @app.route('/PreciptitationProbability/<city>/<town>/<start_time>/<end_time>')
 def precipitationProbability(city, town, start_time, end_time):
 
     field = PrecipitationProbability()
-    return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    try:
+        return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    except ValueError as e:
+        return {
+            'error': str(e)
+        }
 
 from .modules.weatherDescription import WeatherDescription
 @app.route('/WeatherDescription/<city>/<town>/<start_time>/<end_time>')
 def weatherDescription(city, town, start_time, end_time):
 
     field = WeatherDescription()
-    return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    try:
+        return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    except ValueError as e:
+        return {
+            'error': str(e)
+        }
 
 from .modules.weatherIcon import WeatherIcon
 @app.route('/WeatherIcon/<city>/<town>/<start_time>/<end_time>')
 def weatherIcon(city, town, start_time, end_time):
 
     field = WeatherIcon()
-    return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    try:
+        return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    except ValueError as e:
+        return {
+            'error': str(e)
+        }
 
 from .modules.uV import UV
 @app.route('/UV/<city>/<town>/<start_time>/<end_time>')
 def uV(city, town, start_time, end_time):
 
     field = UV()
-    return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    try:
+        return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    except ValueError as e:
+        return {
+            'error': str(e)
+        }
 
 from .modules.sunriseSunsetTime import SunriseSunsetTime
 @app.route('/SunriseSunsetTime/<city>/<town>/<start_time>/<end_time>')
 def sunriseSunsetTime(city, town, start_time, end_time):
 
     field = SunriseSunsetTime()
-    return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    try:
+        return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    except ValueError as e:
+        return {
+            'error': str(e)
+        }
 
 from .modules.moonRiseMoonsetTime import MoonriseMoonsetTime
 @app.route('/MoonRiseMoonsetTime/<city>/<town>/<start_time>/<end_time>')
 def moonriseMoonsetTime(city, town, start_time, end_time):
 
     field = MoonriseMoonsetTime()
-    return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    try:
+        return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    except ValueError as e:
+        return {
+            'error': str(e)
+        }
