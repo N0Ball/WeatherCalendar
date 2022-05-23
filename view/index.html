@@ -204,8 +204,6 @@
                 data.forEach(event => {
                     element = {};
 
-                    console.log(event);
-
                     let TARGET_LIST = ['DTSTART', 'DTEND', 'LOCATION', 'DESCRIPTION'];
 
                     TARGET_LIST.forEach(e => {
@@ -233,8 +231,6 @@
                         }
                     ];
 
-                    console.log(element);
-
                     configs['events'].push(element);
 
                     index += 1;
@@ -261,12 +257,12 @@
             eventModalCard.style.left = left + 1 + 'px';
             eventModalCard.style.top = top + 1 + 'px';
             
-            if (e.clientX + eventModal.offsetWidth + 10 >= window.innerWidth){
-                eventModal.style.left -= `${eventModal.style.width}`;
+            if (e.clientX + eventModalCard.offsetWidth >= window.innerWidth){
+                eventModalCard.style.left = `${left - eventModalCard.offsetWidth}px`;
             }
 
             if (e.clientY + eventModal.offsetHeight + 10 >= window.innerHeight){
-                eventModal.style.left -= `${eventModal.style.height}`;
+                eventModal.style.left = `${top - eventModal.offsetHeight}px`;
             }
 
         });

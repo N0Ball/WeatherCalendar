@@ -14,3 +14,8 @@
     position: absolute;
     z-index: 999;
 }
+
+#event-modal-card {
+    max-width: 500px;
+    min-width: 150px;
+}
