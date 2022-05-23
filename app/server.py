@@ -23,15 +23,21 @@ def index():
 
     for event in c.events:
 
+        if event.all_day:
+            begin = str(event.begin)[:10]
+            end = str(event.end)[:10]
+
+        else:
+            begin = str(event.begin)
+            end = str(event.end)
+
         results.append({
-            'DTSTART': str(event.begin),
-            'DTEND': str(event.end),
+            'DTSTART': begin,
+            'DTEND': end,
             'SUMMARY': event.name,
             'LOCATION': event.location,
             'DESCRIPTION': event.description
         })
-
-    print(results)
 
     return {
         'data': results
