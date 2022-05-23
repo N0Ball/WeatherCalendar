@@ -1,6 +1,18 @@
 version: '3'
 services:
 
+  web:
+    image: nginx
+    volumes:
+      - ./view:/usr/share/nginx/html
+    ports:
+      - 5080:80
+    environment:
+      - NGINX_HOST=wealendar.dos.phy.ncu.edu.tw
+      - NGINX_PORT=80
+    links:
+      - app
+
   app:
     build: .
     restart: unless-stopped
@@ -8,7 +20,7 @@ services:
       - APP_NAME=FlaskApp
       - FLASK_APP=server:app
     ports:
-      - 5000:8080
+      - 5000:5000
     links:
       - redis
     volumes:
