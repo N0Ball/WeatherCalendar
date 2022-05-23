@@ -1,6 +1,8 @@
 import json
+from ics import Calendar
+from datetime import timedelta
 
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 
 import requests
@@ -15,25 +17,21 @@ CORS(app)
 def index():
 
     r = requests.get(os.getenv('URL'))
-    file = r.text.split('\r\n')
+    c = Calendar(r.text)
 
     results = []
-    element = {}
 
-    for line in file:
+    for event in c.events:
 
-        if line == 'BEGIN:VEVENT':
-            element = {}
-            continue
-
-        if line == 'END:VEVENT':
-            results.append(element)
-            continue
-
-        field, *data = tuple(line.split(':'))
-        element.update({
-            field: data
+        results.append({
+            'DTSTART': str(event.begin),
+            'DTEND': str(event.end),
+            'SUMMARY': event.name,
+            'LOCATION': event.location,
+            'DESCRIPTION': event.description
         })
+
+    print(results)
 
     return {
         'data': results

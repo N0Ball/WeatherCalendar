@@ -146,7 +146,7 @@
 
                 data = data.data;
 
-                configs = {
+                const configs = {
                     events: [],
                     height: window.innerHeight*0.85,
                     themeSystem: 'bootstrap5',
@@ -185,7 +185,7 @@
                                     <div id="modal-detail">
                                         <i class="bi bi-list"></i>
                                         <span id="modal-detail-text" class="ps-3 px-5">
-                                            BLA
+                                            ${info.event.extendedProps.description}
                                         </span>
                                     </div>
                                 </p>
@@ -204,6 +204,8 @@
                 data.forEach(event => {
                     element = {};
 
+                    console.log(event);
+
                     let TARGET_LIST = ['DTSTART', 'DTEND', 'LOCATION', 'DESCRIPTION'];
 
                     TARGET_LIST.forEach(e => {
@@ -221,15 +223,17 @@
                     })
 
                     element['id'] = index;
-                    element['title'] = event.SUMMARY[0];
-                    element['start'] = event.DTSTART[0];
-                    element['end'] = event.DTEND[0];
-                    element['description'] = event.DESCRIPTION[0];
+                    element['title'] = event.SUMMARY;
+                    element['start'] = event.DTSTART;
+                    element['end'] = event.DTEND;
+                    element['description'] = event.DESCRIPTION;
                     element['extendedProps'] = [
                         {
-                            "location": event.LOCATION[0]
+                            "location": event.LOCATION
                         }
                     ];
+
+                    console.log(element);
 
                     configs['events'].push(element);
 
