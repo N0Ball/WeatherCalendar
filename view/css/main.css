@@ -14,3 +14,21 @@
     position: absolute;
     z-index: 999;
 }
+
+#setting-button {
+    position: absolute;
+}
+
+#setting-modal-cross {
+    position: relative;
+    right: 0;
+    top: 0;
+}
+
+.setting-select-area {
+    width: 178px;
+    height: 261px;
+    border-radius: 25px;
+    padding-left: 2rem;
+    padding-top: 2.5rem;
+}
