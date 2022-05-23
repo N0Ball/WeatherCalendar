@@ -13,6 +13,14 @@ An extension for google calendar for a getting use of the weather forecast
 cp redis.conf.example redis.conf
 ```
 
+## Backend
+
+```bash
+cp .env.example .env
+```
+
+# Run
+
 change the password, than
 ```bash
 # For docker Desktop
