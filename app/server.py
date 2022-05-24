@@ -13,7 +13,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/')
+@app.route('/cal')
 def index():
 
     r = requests.get(os.getenv('URL'))
