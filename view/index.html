@@ -14,47 +14,13 @@
 </head>
 <body class="h-100">
 
+    <div id="settingModal"></div>
+
     <div class="row g-0 mt-3 me-3">
         
         <div id="sidebar" class="col-xl-2 d-none d-xl-block d-flex">
 
             <div class="d-flex flex-column w-100 h-100 justify-content-center align-items-center">
-
-                <!-- <div id="my-calendars-field" class="accordion w-75">
-                    <div class="accordion-item border-0">
-                        <h2 class="accordion-header" id="my-calendars">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#my-calendars-collapse" aria-expanded="true" aria-controls="my-calendars-collapse">
-                                我的日曆
-                            </button>
-                        </h2>
-                        <div id="my-calendars-collapse" class="accordion-collapse collapse show" aria-labelledby="my-calendars">
-                            <div class="accordion-body">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="check-1-1">
-                                    <label class="form-check-label" for="check-1-1">
-                                        黑客松
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="accordion-body">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="check-1-2">
-                                    <label class="form-check-label" for="check-1-2">
-                                        實習
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="accordion-body">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="check-1-3">
-                                    <label class="form-check-label" for="check-1-3">
-                                        打工
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
 
                 <div id="other-calendars" class="accordion w-75">
                     <div class="accordion-item border-0">
@@ -92,47 +58,12 @@
 
     </div>
     
-    <div id="event-modal" class="d-none">
-        <div id="event-modal-card" class="card">
-            <div class="card-header">
-                <h3 id="event-header-text">
-                    和 Annie打網球
-                </h3>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title"></h5>
-                <p class="card-text">
-                    <div id="modal-people">
-                        <i class="bi bi-people"></i>
-                        <span id="modal-people-text" class="ps-3 px-5">
-                            annie@weatherhackthon.tw
-                        </span>
-                    </div>
-                    <div id="modal-location">
-                        <i class="bi bi-geo-alt"></i>
-                        <span id="modal-location-text" class="ps-3 px-5">
-                            台北市松山區
-                        </span>
-                    </div>
-                    <div id="modal-detail">
-                        <i class="bi bi-list"></i>
-                        <span id="modal-detail-text" class="ps-3 px-5">
-                            BLA
-                        </span>
-                    </div>
-                </p>
-            </div>
-        </div>
-    </div>
+    <div id="event-modal" class="d-none"></div>
 
+    <script src="./js/loader.js"></script>
+    <script src="./js/calendar.js"></script>
     <script>
-
-        document.addEventListener('DOMContentLoaded', function() {
-        });
-  
-    </script>
-
-    <script>
+<<<<<<< HEAD
         
         let requestURL = 'https://api.dos.phy.ncu.edu.tw';
 
@@ -264,8 +195,19 @@
             if (e.clientY + eventModal.offsetHeight + 10 >= window.innerHeight){
                 eventModal.style.left = `${top - eventModal.offsetHeight - 10}px`;
             }
+=======
+        class IndexLoaderManager extends LoaderManager{
+            postLoad(){
+                console.log("Finish fetched");
+            }
+        }
 
-        });
+        const manager = new IndexLoaderManager();
+        manager.addLoader(new Includer('settingModal'));
+>>>>>>> feature
+
+        const calendar = new Calendar();
+        calendar.addEvent();
 
     </script>
 
