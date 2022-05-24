@@ -15,12 +15,6 @@
     z-index: 999;
 }
 
-<<<<<<< HEAD
-#event-modal-card {
-    max-width: 500px;
-    min-width: 350px;
-}
-=======
 #setting-button {
     position: absolute;
 }
@@ -42,4 +36,3 @@
 .modal-body {
     word-wrap: break-word;
 }
->>>>>>> feature
