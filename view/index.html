@@ -14,54 +14,7 @@
 </head>
 <body class="h-100">
 
-    <!-- Button trigger modal -->
-    <div id="setting-button" class="mx-3">
-        <button type="button" class="btn btn-primary text-center" data-bs-toggle="modal" data-bs-target="#setting-modal">
-            <h2 class="bi bi-gear"></h4>
-        </button>
-    </div>
-    
-    <!-- Modal -->
-    <div class="modal fade" id="setting-modal" tabindex="-1" aria-labelledby="setting-modal-label" aria-hidden="true">
-        <div class="modal-dialog" style="max-width: 700px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-center fw-bold w-100" id="setting-modal-label">
-                        請告訴我們您是哪種人吧！
-                    </h5>
-                    <button id="setting-modal-cross" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="d-flex justify-content-around">
-                        <div class="setting-select-area" style="background-color: #EDFBE6;">
-                            <h4 class="fw-bold">
-                                通勤人
-                            </h4>
-                            雨量 <br>
-                            <img class="mt-3" src="./img/setting/bus.png" alt="bus" height="100px" width="100px">
-                        </div>
-                        <div class="setting-select-area text-white" style="background-color: #525665;">
-                            <h4 class="fw-bold">
-                                吸血鬼
-                            </h4>
-                            紫外線 <br>
-                            <img class="mt-3"  src="./img/setting/needle.png" alt="needle" height="100px" width="100px">
-                        </div>
-                        <div class="setting-select-area" style="background-color: #CEDEFE;">
-                            <h4 class="fw-bold">
-                                天文人
-                            </h4>
-                            月亮、雲相 <br>
-                            <img class="mt-3"  src="./img/setting/telescope.png" alt="telescope" height="100px" width="100px">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id="settingModal"></div>
 
     <div class="row g-0 mt-3 me-3">
         
@@ -253,8 +206,6 @@
                 data.forEach(event => {
                     element = {};
 
-                    console.log(event);
-
                     let TARGET_LIST = ['DTSTART', 'DTEND', 'LOCATION', 'DESCRIPTION'];
 
                     TARGET_LIST.forEach(e => {
@@ -281,8 +232,6 @@
                             "location": event.LOCATION
                         }
                     ];
-
-                    console.log(element);
 
                     configs['events'].push(element);
 
@@ -320,6 +269,19 @@
 
         });
 
+    </script>
+    <script src="./js/loader.js"></script>
+    <script>
+        class IndexLoaderManager extends LoaderManager{
+            postLoad(){
+                console.log("Finish fetched");
+            }
+        }
+
+        const manager = new IndexLoaderManager();
+
+        manager.addLoader(new Includer('settingModal'));
+        manager.init();
     </script>
 
 </body>
