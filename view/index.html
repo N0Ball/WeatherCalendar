@@ -254,15 +254,15 @@
             let eventModalCard = document.getElementById('event-modal-card');
             let left = e.clientX;
             let top = e.clientY;
-            eventModalCard.style.left = left + 1 + 'px';
-            eventModalCard.style.top = top + 1 + 'px';
+            eventModalCard.style.left = left + 3 + 'px';
+            eventModalCard.style.top = top + 3 + 'px';
             
-            if (e.clientX + eventModalCard.offsetWidth >= window.innerWidth){
-                eventModalCard.style.left = `${left - eventModalCard.offsetWidth}px`;
+            if (e.clientX + eventModalCard.offsetWidth + 10 >= window.innerWidth){
+                eventModalCard.style.left = `${left - eventModalCard.offsetWidth - 10}px`;
             }
 
             if (e.clientY + eventModal.offsetHeight + 10 >= window.innerHeight){
-                eventModal.style.left = `${top - eventModal.offsetHeight}px`;
+                eventModal.style.left = `${top - eventModal.offsetHeight - 10}px`;
             }
 
         });
