@@ -1,50 +1,69 @@
 
-let requestURL = 'http://localhost:5000';
+let requestURL = 'https://api.dos.phy.ncu.edu.tw/cal';
 
 const eventModal = document.getElementById('event-modal');
 const eventModalCard = document.getElementById('event-modal-card');
 
+const CalendarConfig = Object(
+    {
+        height: window.innerHeight*0.85,
+        themeSystem: 'bootstrap5',
+        displayEventTime: false,
+        customButtons: {
+            bell: {}
+        },
+        buttonIcons: {
+            prev: 'chevron-left',
+            next: 'chevron-right',
+            bell: 'bell'
+        },
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'bell'
+        }
+    }
+)
+
 class CalendarManager extends(LoaderManager){
-    postLoad(){}
+
+    constructor(calendar){
+        super();
+        this.CALENDAR = calendar;
+    }
+
+    postLoad(){
+        this.CALENDAR.loadEvent();
+        this.CALENDAR.update();
+    }
 }
 
-async function getCalendar(url){
-    try {
-        let response = await fetch(url);
-        let data = await response.json();
+class Calendar{
 
-        data = data.data;
+    constructor(){
+        this.CONFIG = CalendarConfig;
+        this.LOADER = new CalendarManager(this);
+        this.CALENDAR_EL = document.getElementById('calendar');
+        this.CALENDAR = undefined;
+        this.addHandler();
+    }
 
-        const configs = {
-            events: [],
-            height: window.innerHeight*0.85,
-            themeSystem: 'bootstrap5',
-            displayEventTime: false,
-            customButtons: {
-                bell: {}
-            },
-            buttonIcons: {
-                prev: 'chevron-left',
-                next: 'chevron-right',
-                bell: 'bell'
-            },
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'bell'
-            },
-            eventMouseEnter: (info) => {
+    addEvent(){
+        this.LOADER.addLoader(new Loader('cal'));
+    }
 
-                eventModal.innerHTML = `
-                <div id="event-modal-card" class="card">
-                    <div class="card-header">
-                        <h3 id="event-header-text">
-                            ${info.event.title}
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title"></h5>
-                        <p class="card-text">
+    addHandler(){
+        this.CONFIG.eventClick = info => {
+
+            eventModal.innerHTML = `
+            <div id="event-modal-card" class="d-flex flex-wrap" tabindex="-1" aria-labelledby="event-modal-label" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title m-2">${info.event.title}</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="disableEventModal();"></button>
+                        </div>
+                        <div class="modal-body">
                             <div id="modal-location">
                                 <i class="bi bi-geo-alt"></i>
                                 <span id="modal-location-text" class="ps-3 px-5">
@@ -57,21 +76,33 @@ async function getCalendar(url){
                                     ${info.event.extendedProps.description}
                                 </span>
                             </div>
-                        </p>
+                        </div>
                     </div>
                 </div>
-                `
+            </div>
+            `
 
-                eventModal.classList.remove('d-none');
-            },
-            eventMouseLeave: (info) => {
-                eventModal.classList.add('d-none');
-            }
+            eventModal.classList.remove('d-none');
+
+            let eventModalCard = document.getElementById('event-modal-card');
+
+            eventModalCard.style.left = info.el.getBoundingClientRect().x + 'px';
+            eventModalCard.style.top = info.el.getBoundingClientRect().y + 'px';
+
+            console.log(eventModalCard.style.left);
+
         };
+    }
 
-        index = 0
+    loadEvent(){
+
+        this.CONFIG.events = [];
+
+        let index = 0;
+        let data = this.LOADER.getLoaderData('cal').data;
+
         data.forEach(event => {
-            element = {};
+            let element = {};
 
             let TARGET_LIST = ['DTSTART', 'DTEND', 'LOCATION', 'DESCRIPTION'];
 
@@ -99,41 +130,25 @@ async function getCalendar(url){
                     "location": event.LOCATION
                 }
             ];
+            element['e']
 
-            configs['events'].push(element);
-
+            this.CONFIG.events.push(element);
             index += 1;
         });
-
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, configs);
-
-        calendar.render();
-        
-        return data[data];
-    } catch(error) {
-        console.log(`Error: ${error}`);
     }
+
+    update(){
+
+        try {
+            this.CALENDAR = new FullCalendar.Calendar(this.CALENDAR_EL, this.CONFIG);
+            this.CALENDAR.render();
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+
 }
 
-getCalendar(requestURL);
-
-document.addEventListener('mousemove', function(e) {
-
-    try{
-        let eventModalCard = document.getElementById('event-modal-card');
-        let left = e.clientX;
-        let top = e.clientY;
-        eventModalCard.style.left = left + 1 + 'px';
-        eventModalCard.style.top = top + 1 + 'px';
-        
-        if (e.clientX + eventModal.offsetWidth + 10 >= window.innerWidth){
-            eventModal.style.left -= `${eventModal.style.width}`;
-        }
-    
-        if (e.clientY + eventModal.offsetHeight + 10 >= window.innerHeight){
-            eventModal.style.left -= `${eventModal.style.height}`;
-        }
-    }catch(e){}
-
-});
+function disableEventModal() {
+    eventModal.classList.add('d-none');
+}

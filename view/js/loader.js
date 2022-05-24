@@ -1,11 +1,9 @@
-API_URI = 'https://api.dos.phy.ncu.edu.tw';
-
 class LoaderManager{
 
     constructor(){
         this.loaders = Array();
         this.loaderData = {};
-        this.init();
+        this.update();
     };
 
     addLoader(loader){
@@ -18,13 +16,10 @@ class LoaderManager{
         this.loaders.forEach(loader => {
             loader.fetchUri()
             .then( res => {
-                loader.status = true;
                 this.loaderData[loader.NAME] = res;
-                this.update();
+                loader.status = true;
             });
         });
-
-        this.update();
 
     }
 
@@ -34,7 +29,7 @@ class LoaderManager{
 
         this.loaders.forEach(loader => {
 
-            if(loader.status){
+            if(!loader.status){
                 finishLoad = false;
                 return;
             }
@@ -47,11 +42,10 @@ class LoaderManager{
             this.init();
         }
 
-        if (this.loaders.length == 0){
-            setTimeout(() => {
-                this.init()
-            }, 1000);
-        }
+        setTimeout(() => {
+            this.init();
+            this.update();
+        }, 1000);
 
     }
 
@@ -66,10 +60,10 @@ class LoaderManager{
 
 class Loader{
     
-    constructor(name, requests, uri){
+    constructor(name, requests){
         this.NAME = name;
         this.REQ = requests;
-        this.URI = `${uri}/${this.NAME}`;
+        this.URI = `https://api.dos.phy.ncu.edu.tw/${this.NAME}`;
         this.status = false;
         this.data = undefined;
     }
