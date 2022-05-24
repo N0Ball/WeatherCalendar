@@ -5,6 +5,7 @@ class LoaderManager{
     constructor(){
         this.loaders = Array();
         this.loaderData = {};
+        this.init();
     };
 
     addLoader(loader){
@@ -23,6 +24,8 @@ class LoaderManager{
             });
         });
 
+        this.update();
+
     }
 
     update(){
@@ -31,16 +34,23 @@ class LoaderManager{
 
         this.loaders.forEach(loader => {
 
-            if(!loader.status){
+            if(loader.status){
                 finishLoad = false;
                 return;
             }
 
         });
 
-        if (finishLoad){
+        if (finishLoad && this.loaders.length != 0){
             this.loaders = Array();
             this.postLoad();
+            this.init();
+        }
+
+        if (this.loaders.length == 0){
+            setTimeout(() => {
+                this.init()
+            }, 1000);
         }
 
     }
