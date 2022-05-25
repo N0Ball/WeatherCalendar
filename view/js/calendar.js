@@ -122,13 +122,13 @@ class Calendar{
 
         let iconsHTML = '';
         this.INFO.event.extendedProps.icons.forEach( icon => {
-            let time = icon.datetime.split(' ')[1];
+            let time = icon.datetime.split(' ')[1].split(':')[0];
             let url = icon.urls;
             
             iconsHTML += `
-            <div class="mx-3 px-3">
-                <spam> ${time} </spam>
+            <div class="mx-3 px-3 mt-2">
                 <img src="${url}" width="25" height="25">
+                <spam class="mx-1"> ${time}00 </spam>
             </div>
             `
         })
@@ -226,6 +226,10 @@ class Calendar{
             result = await fetch(`${API_URL}/WeatherIcon/${city}/${town}/${event.DTSTART}/${event.DTEND}`);
             let icons = await result.json();
             icons = icons.data;
+
+            if (event.LOCATION == ''){
+                event.LOCATION = `${city}, ${town}`;
+            }
 
             element['id'] = index;
             element['title'] = event.SUMMARY;
