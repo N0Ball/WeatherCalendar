@@ -41,6 +41,7 @@ class CalendarManager extends(LoaderManager){
 
         if (this.TYPE == "STATUS"){
             this.CALENDAR.loadStatus();
+            this.CALENDAR.LOADING.classList.add('d-none');
         }
 
     }
@@ -239,6 +240,10 @@ class Calendar{
     }
 
     initStatus(){
+
+        this.LOADING = document.getElementById('loading');
+        this.LOADING.classList.remove('d-none');
+
         this.LOADER.TYPE = "STATUS";
         this.DATE_CELLS = document.querySelectorAll(`[role="gridcell"]`);
         this.START_DATE = this.DATE_CELLS[0].getAttribute('data-date');
@@ -362,6 +367,8 @@ class Calendar{
             </div>
             `
         }
+
+        return '';
     }
 
 }
