@@ -70,7 +70,7 @@ class MapParser{
 class Calendar{
 
     constructor(){
-        this.CONFIG = CalendarConfig;
+        this.CONFIG = Object.assign({}, CalendarConfig);
         this.LOADER = new CalendarManager(this);
         this.CALENDAR_EL = document.getElementById('calendar');
         this.CALENDAR = undefined;
@@ -117,8 +117,6 @@ class Calendar{
     }
 
     updateEventModal(){
-
-        console.log(this.INFO.event.extendedProps.icons);
 
         let iconsHTML = '';
         this.INFO.event.extendedProps.icons.forEach( icon => {
@@ -187,9 +185,18 @@ class Calendar{
 
         let index = 0;
         let data = this.LOADER.getLoaderData('cal').data;
+        let location = getCookie('location') || {
+            city: '臺北市',
+            town: '中山區'
+        };
+
+        location = JSON.parse(location);
 
         data.forEach(async event => {
+    
             let element = {};
+            let city = location.city;
+            let town = location.town;
 
             let TARGET_LIST = ['DTSTART', 'DTEND', 'LOCATION', 'DESCRIPTION'];
 
@@ -206,9 +213,6 @@ class Calendar{
                     event[e.split(';')[0]] = event[e];
                 }
             })
-
-            let city = '彰化縣';
-            let town = '彰化市';
 
             try {
                 var map = this.MAP_PARSER.parse(event.LOCATION);
