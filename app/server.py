@@ -1,8 +1,7 @@
 import json
 from ics import Calendar
-from datetime import timedelta
 
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
 
 import requests
@@ -42,13 +41,6 @@ def index():
     return {
         'data': results
     }
-@app.route('/city')
-def getTown():
-
-    with open('towns.json', 'r') as data:
-        result = json.loads(data.read())
-
-    return {'data': result}
 
 @app.route('/city')
 def getTown():
@@ -99,6 +91,18 @@ from .modules.weatherIcon import WeatherIcon
 def weatherIcon(city, town, start_time, end_time):
 
     field = WeatherIcon()
+    try:
+        return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    except ValueError as e:
+        return {
+            'error': str(e)
+        }
+
+from .modules.weatherIconAll import WeatherIconAll
+@app.route('/WeatherIconAll/<city>/<town>/<start_time>/<end_time>')
+def weatherIconAll(city, town, start_time, end_time):
+
+    field = WeatherIconAll()
     try:
         return {'data': json.loads(field.get(city, town, start_time, end_time))}
     except ValueError as e:

@@ -67,7 +67,7 @@ class Calendar{
         this.LOADER.TYPE = "CALENDAR";
         this.MAP_PARSER = new MapParser();
         this.FIELD_LIST = ['Temperature'];
-        this.STATUS_LIST = ['MoonriseMoonsetTime', 'SunriseSunsetTime']
+        this.STATUS_LIST = ['MoonriseMoonsetTime', 'SunriseSunsetTime', 'WeatherIconAll', 'UV', 'PrecipitationProbability']
         this.addHandler();
     }
 
@@ -277,9 +277,14 @@ class Calendar{
 
         this.DATE_CELLS.forEach( cell => {
             let date = cell.getAttribute('data-date');
+            cell.classList.add('position-relative');
 
             let statusField = document.createElement('div');
+            let storedDiv = document.createElement('div');
             statusField.classList.add('position-relative');
+            storedDiv.classList.add('position-absolute');
+            storedDiv.style.left = cell.getBoundingClientRect().width - 30 + 'px';
+            storedDiv.style.top = '7px';
             
             this.STATUS_RESULT[date].forEach( status => {
                 let statusDiv = document.createElement('div');
@@ -287,12 +292,21 @@ class Calendar{
 
                 statusDiv.innerHTML = this.createStatus(status);
 
-                statusField.appendChild(statusDiv);
+                if (status.target == 'WeatherIconAll'){
+                    storedDiv.innerHTML = statusDiv.innerHTML;
+                }else{
+                    statusField.appendChild(statusDiv);
+                }
+
             });
 
             
             cell.appendChild(statusField);
             statusField.style.top = - statusField.getBoundingClientRect().height + 'px';
+            
+            if (storedDiv){
+                cell.appendChild(storedDiv);
+            }
         });
 
     }
@@ -338,34 +352,21 @@ class Calendar{
         }
 
         if (status.target == 'UV'){
-            // console.log(status);
-            // return `
-            //     UV: ${status.data.UVindex} -> ${status.data.UVdisplay}
-            // `
-
-            let index = status.data.UVindex;
-
-            if (index > 7){
-                index += 1;
-            }
-
-            // <div class="card bg-dark text-white">
-            //     <img src="..." class="card-img" alt="...">
-            //     <div class="card-img-overlay">
-            //         <h5 class="card-title">Card title</h5>
-            //         <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            //         <p class="card-text">Last updated 3 mins ago</p>
-            //     </div>
-            // </div>
             
             return `
-            <div class="d-flex flex-column">
-                <span class="position-relative top-50 left-50">
-                    ${status.data.UVindex}
-                </span>
-                <img src="./img/status/uv${Math.ceil(index/3)}.png" width="30" height="30">
-            </div>
+            <img src="./img/status/uv-${status.data.UVindex}.svg" width="30" height="30">
             `
+        }
+
+        if (status.target == 'WeatherIconAll'){
+
+            return `
+            <img src="${status.data.urls}" width="15" height="15">
+            `
+        }
+
+        if (status.target == 'PrecipitationProbability'){
+            console.log(status.data);
         }
 
         return '';
