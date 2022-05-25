@@ -45,6 +45,12 @@ class Temperature:
 
     def _get_target_url(self, city, town, start_time, end_time):
 
+        if ':' not in start_time:
+            start_time += 'T00:00:00'
+
+        if ':' not in end_time:
+            end_time += 'T00:00:00'
+
         T_diff = self.__T_diff(end_time)
         productID = CWB.productIdGet(city, T_diff)
         townName = f"locationName={town}"
