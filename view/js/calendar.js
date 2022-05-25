@@ -68,6 +68,7 @@ class Calendar{
         this.MAP_PARSER = new MapParser();
         this.FIELD_LIST = ['Temperature'];
         this.STATUS_LIST = ['MoonriseMoonsetTime', 'SunriseSunsetTime', 'WeatherIconAll', 'UV', 'PrecipitationProbabilityAll']
+        this.PARSER = undefined;
         this.addHandler();
     }
 
@@ -334,7 +335,7 @@ class Calendar{
                         ${status.data.set_time}
                     </div>
                 </div>
-            `
+            `;
         }
 
         if (status.target == 'SunriseSunsetTime'){
@@ -348,21 +349,21 @@ class Calendar{
                         ${status.data.set_time}
                     </div>
                 </div>
-            `
+            `;
         }
 
         if (status.target == 'UV'){
             
             return `
             <img src="./img/status/uv-${status.data.UVindex}.svg" width="30" height="30">
-            `
+            `;
         }
 
         if (status.target == 'WeatherIconAll'){
 
             return `
             <img src="${status.data.urls}" width="15" height="15">
-            `
+            `;
         }
 
         if (status.target == 'PrecipitationProbabilityAll'){
@@ -371,8 +372,11 @@ class Calendar{
             }
 
             return `
-            
-            `
+            <img src="./img/status/water.png" width="30" height="30">
+            <spam class="mx-2 mt-2" style="font-size: .75rem">
+                ${status.data.values}%
+            </spam>
+            `;
         }
 
         return '';
