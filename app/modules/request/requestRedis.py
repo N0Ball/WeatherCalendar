@@ -10,8 +10,8 @@ class RequestRedis:
 
     def initial(self, url, result):
 
-        self.r.set(f'url:{url}:data', result)
-        self.r.set(f'url:{url}:count', 1)
+        self.r.set(f'url:{url}:data', result, ex=3600)
+        self.r.incr(f'url:{url}:count')
         print('Add new data in redis')
         pass
     

@@ -1,11 +1,18 @@
 import requests
+import json
+from .requestRedis import RequestRedis
 
 class RequestURL:
 
     def __init__(self):
-        pass
+        self.Redis = RequestRedis()
 
-    def get_url(url: str):
+    def get_url(self, url: str):
+
+        response = self.Redis.get(url)
+        
+        if response is not None:
+            return json.loads(response)
 
         # url = []
         headers = {
@@ -14,7 +21,11 @@ class RequestURL:
             }
         try:
             response = requests.get(url, headers=headers)
-        except:
+            response = response.json()
+            self.Redis.initial(url, json.dumps(response))
+        except Exception as e:
             response = None
+            print(e)
             print("\nWarning: opendata.cwb.gov.tw conection fault!!!\n")
+
         return response

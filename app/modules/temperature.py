@@ -5,7 +5,6 @@ from random import randint
 
 from .request.cwb import CWB
 from .request.requestUrl import RequestURL
-from .request.requestRedis import RequestRedis
 
 class Temperature:
 
@@ -18,26 +17,15 @@ class Temperature:
     def get(self, city:str, town:str, start_time:str, end_time:str):
         
         self.url = self._get_target_url(city, town, start_time, end_time)
+        self.REQUEST_URL = RequestURL()
         # print(self.url)
-        api_response = RequestURL.get_url(self.url)
-        redis_response = RequestRedis().get(self.url)
+        api_response = self.REQUEST_URL.get_url(self.url)
 
-        # api_response = None
-        # redis_response = None
         if api_response is None:
-            if redis_response is None:
-                print("Warning: fake value is worked.")
-                result = json.loads(self._fake_value())
-            else:
-                result = json.loads(redis_response)
-        else:
-            data = self._filter_response(api_response.json())
-            result = self._data_processor(data)
-            if redis_response is None:
-                RequestRedis().initial(self.url, result)
-            else:
-                if json.loads(result) != json.loads(redis_response):
-                    RequestRedis().update(self.url, result)
+            return self._fake_value()
+
+        data = self._filter_response(api_response)
+        result = self._data_processor(data)
 
         return result
 
