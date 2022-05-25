@@ -74,6 +74,18 @@ def precipitationProbability(city, town, start_time, end_time):
             'error': str(e)
         }
 
+from .modules.precipitationProbabilityAll import PrecipitationProbabilityAll
+@app.route('/PrecipitationProbabilityAll/<city>/<town>/<start_time>/<end_time>')
+def precipitationProbabilityAll(city, town, start_time, end_time):
+
+    field = PrecipitationProbabilityAll()
+    try:
+        return {'data': json.loads(field.get(city, town, start_time, end_time))}
+    except ValueError as e:
+        return {
+            'error': str(e)
+        }
+
 from .modules.weatherDescription import WeatherDescription
 @app.route('/WeatherDescription/<city>/<town>/<start_time>/<end_time>')
 def weatherDescription(city, town, start_time, end_time):

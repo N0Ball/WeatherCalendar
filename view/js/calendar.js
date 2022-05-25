@@ -67,7 +67,7 @@ class Calendar{
         this.LOADER.TYPE = "CALENDAR";
         this.MAP_PARSER = new MapParser();
         this.FIELD_LIST = ['Temperature'];
-        this.STATUS_LIST = ['MoonriseMoonsetTime', 'SunriseSunsetTime', 'WeatherIconAll', 'UV', 'PrecipitationProbability']
+        this.STATUS_LIST = ['MoonriseMoonsetTime', 'SunriseSunsetTime', 'WeatherIconAll', 'UV', 'PrecipitationProbabilityAll']
         this.addHandler();
     }
 
@@ -365,8 +365,14 @@ class Calendar{
             `
         }
 
-        if (status.target == 'PrecipitationProbability'){
-            console.log(status.data);
+        if (status.target == 'PrecipitationProbabilityAll'){
+            if (status.data.values == ' '){
+                return '';
+            }
+
+            return `
+            
+            `
         }
 
         return '';
