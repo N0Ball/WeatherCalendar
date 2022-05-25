@@ -23,6 +23,12 @@ function eraseCookie(name) {
     document.cookie=name + '=' +"; Max-Age=0; path=/";
 }
 
+function clearCookie(){
+    document.cookie.split(';').forEach(function(c) {
+        document.cookie = c.trim().split('=')[0] + '=;' + 'expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    });
+}
+
 function getParameterByName(name, url = window.location.href) {
     name = name.replace(/[\[\]]/g, '\\$&');
     var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),

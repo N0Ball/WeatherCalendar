@@ -1,12 +1,12 @@
 <!-- Button trigger modal -->
 <div id="setting-button" class="mx-3">
-    <button type="button" class="btn btn-primary text-center" data-bs-toggle="modal" data-bs-target="#setting-modal">
+    <button id="setting-modal-button" type="button" class="btn btn-primary text-center" data-bs-toggle="modal" data-bs-target="#setting-modal">
         <h2 class="bi bi-gear"></h4>
     </button>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="setting-modal" tabindex="-1" aria-labelledby="setting-modal-label" aria-hidden="true">
+<div class="modal fade show" id="setting-modal" tabindex="-1" aria-labelledby="setting-modal-label" aria-hidden="true">
     <div class="h-100 d-flex justify-content-center align-items-center">        
         <div class="modal-dialog" style="max-width: 700px;">
             <div class="modal-content">
@@ -15,7 +15,6 @@
                     <h5 class="modal-title text-center fw-bold w-100" id="setting-modal-label">
                         請告訴我們您是哪種人吧！
                     </h5>
-                    <button id="setting-modal-cross" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-around">
@@ -43,7 +42,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Save changes</button>
+                    <div class="w-75 d-flex">
+                        <select id="setting-city" class="form-select form-select-sm me-3" aria-label=".form-select-sm city">
+                            <option selected>縣、市</option>
+                        </select>
+                        <select id="setting-town" class="form-select form-select-sm mx-2" aria-label=".form-select-sm town">
+                            <option selected>鄉、鎮、市</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="checkSetting(this);">Save changes</button>
                 </div>
                 
             </div>

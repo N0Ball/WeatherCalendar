@@ -59,7 +59,7 @@ class MapParser{
 class Calendar{
 
     constructor(){
-        this.CONFIG = CalendarConfig;
+        this.CONFIG = Object.assign({}, CalendarConfig);
         this.LOADER = new CalendarManager(this);
         this.CALENDAR_EL = document.getElementById('calendar');
         this.CALENDAR = undefined;
@@ -85,17 +85,17 @@ class Calendar{
 
     updateEventModal(){
 
-        console.log(this.INFO.event.extendedProps.icons);
-
         let iconsHTML = '';
         this.INFO.event.extendedProps.icons.forEach( icon => {
-            let time = icon.datetime.split(' ')[1].split(':')[0];
+            let time = icon.datetime.split(' ');
+            let date = time[0].slice(5).replace('-', '/');
+            time = time[1].slice(0, 5);
             let url = icon.urls;
             
             iconsHTML += `
             <div class="mx-3 px-3 mt-2">
                 <img src="${url}" width="25" height="25">
-                <spam class="mx-1"> ${time}00 </spam>
+                <spam class="mx-1"> ${date} ${time} </spam>
             </div>
             `
         })
@@ -159,10 +159,10 @@ class Calendar{
         this.LOAD_SIZE = data.length;
         
         data.forEach(async event => {
+    
             let element = {};
             let city = location.city;
             let town = location.town;
-
 
             let TARGET_LIST = ['DTSTART', 'DTEND', 'LOCATION', 'DESCRIPTION'];
 

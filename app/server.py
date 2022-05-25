@@ -50,6 +50,14 @@ def getTown():
 
     return {'data': result}
 
+@app.route('/city')
+def getTown():
+
+    with open('towns.json', 'r') as data:
+        result = json.loads(data.read())
+
+    return {'data': result}
+
 from .modules.temperature import Temperature
 @app.route('/Temperature/<city>/<town>/<start_time>/<end_time>')
 def temperature(city, town, start_time, end_time):

@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="lib/bootstrap-5.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/main.css">
-    <script src="js/lib.js"></script>
+    <script src="./js/lib.js"></script>
+    <script src="./js/loader.js"></script>
     <script src="lib/fullcalendar/lib/main.min.js"></script>
     <script src="lib/bootstrap-5.0.2/js/bootstrap.bundle.min.js"></script>
     <title>Test</title>
@@ -61,12 +62,13 @@
     
     <div id="event-modal" class="d-none"></div>
 
-    <script src="./js/loader.js"></script>
     <script src="./js/calendar.js"></script>
+    <script src="./js/setting.js"></script>
     <script>
+
         class IndexLoaderManager extends LoaderManager{
             postLoad(){
-                console.log("Finish fetched");
+                loadSetting();
             }
         }
 
