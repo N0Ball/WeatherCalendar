@@ -55,8 +55,8 @@ def temperature(city, town, start_time, end_time):
             'error': str(e)
         }
 
-from .modules.preciptitationProbability import PrecipitationProbability
-@app.route('/PreciptitationProbability/<city>/<town>/<start_time>/<end_time>')
+from .modules.precipitationProbability import PrecipitationProbability
+@app.route('/PrecipitationProbability/<city>/<town>/<start_time>/<end_time>')
 def precipitationProbability(city, town, start_time, end_time):
 
     field = PrecipitationProbability()
@@ -116,7 +116,7 @@ def sunriseSunsetTime(city, town, start_time, end_time):
         }
 
 from .modules.moonRiseMoonsetTime import MoonriseMoonsetTime
-@app.route('/MoonRiseMoonsetTime/<city>/<town>/<start_time>/<end_time>')
+@app.route('/MoonriseMoonsetTime/<city>/<town>/<start_time>/<end_time>')
 def moonriseMoonsetTime(city, town, start_time, end_time):
 
     field = MoonriseMoonsetTime()
