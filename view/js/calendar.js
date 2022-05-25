@@ -35,24 +35,13 @@ class CalendarManager extends(LoaderManager){
     async postLoad(){
 
         if (this.TYPE == "CALENDAR"){
-            await this.CALENDAR.loadEvent();
+            this.CALENDAR.loadEvent();
             return;
         }
 
-        // if (this.TYPE == "EVENT"){
-
-        //     this.CALENDAR.FIELD_LIST.forEach( field => {
-        //         let data = this.CALENDAR.LOADER.getLoaderData(`${field}/${this.CALENDAR.EVENT_TARGET}`).data;
-
-        //         this.CALENDAR.INFO.event.extendedProps.description.push(`
-        //             TEMPERATURE ${data.max}/${data.min}
-        //         `);
-
-        //     })
-
-        //     this.CALENDAR.updateEventModal();
-        //     return;
-        // }
+        if (this.TYPE == "STATUS"){
+            this.CALENDAR.loadStatus();
+        }
 
     }
 }
@@ -77,6 +66,7 @@ class Calendar{
         this.LOADER.TYPE = "CALENDAR";
         this.MAP_PARSER = new MapParser();
         this.FIELD_LIST = ['Temperature'];
+        this.STATUS_LIST = ['MoonriseMoonsetTime', 'SunriseSunsetTime']
         this.addHandler();
     }
 
@@ -90,29 +80,6 @@ class Calendar{
             this.INFO = info;
             this.LOADER.TYPE = "EVENT";
             this.updateEventModal();
-
-            // try {
-            //     var map = this.MAP_PARSER.parse(this.INFO.event.extendedProps.location);
-            //     var city = map[3];
-            //     var town = map[4];
-            //     city = city.split('台灣')[1];
-            // } catch (error) {
-            //     this.INFO.event.extendedProps.setWeather.push(true);
-            // }
-            
-            // if (this.INFO.event.extendedProps.setWeather.length != 0){
-            //     this.updateEventModal();
-            //     return;
-            // }
-
-            // this.EVENT_TARGET = `${city}/${town}/${this.INFO.event.startStr}/${this.INFO.event.endStr}`;
-
-            // this.FIELD_LIST.forEach(field => {
-            //     this.LOADER.addLoader(new Loader(`${field}/${this.EVENT_TARGET}`));
-            // });
-
-            // this.INFO.event.extendedProps.setWeather.push(true);
-
         };
     }
 
@@ -186,10 +153,16 @@ class Calendar{
         this.CONFIG.events = [];
 
         let index = 0;
+        
         let data = this.LOADER.getLoaderData('cal').data;
-
+        let location = this.getLocatoin();
+        this.LOAD_SIZE = data.length;
+        
         data.forEach(async event => {
             let element = {};
+            let city = location.city;
+            let town = location.town;
+
 
             let TARGET_LIST = ['DTSTART', 'DTEND', 'LOCATION', 'DESCRIPTION'];
 
@@ -205,10 +178,7 @@ class Calendar{
                 if (event[e] != undefined){
                     event[e.split(';')[0]] = event[e];
                 }
-            })
-
-            let city = '彰化縣';
-            let town = '彰化市';
+            });
 
             try {
                 var map = this.MAP_PARSER.parse(event.LOCATION);
@@ -222,6 +192,7 @@ class Calendar{
             let result = await fetch(`${API_URL}/Temperature/${city}/${town}/${event.DTSTART}/${event.DTEND}`);
             let temp = await result.json();
             temp = temp.data;
+
 
             result = await fetch(`${API_URL}/WeatherIcon/${city}/${town}/${event.DTSTART}/${event.DTEND}`);
             let icons = await result.json();
@@ -254,10 +225,142 @@ class Calendar{
     update(){
 
         try {
+
             this.CALENDAR = new FullCalendar.Calendar(this.CALENDAR_EL, this.CONFIG);
             this.CALENDAR.render();
+
+            if (this.CONFIG.events.length == this.LOAD_SIZE){
+                this.initStatus();
+            }
+
         } catch (error) {
             console.warn(error);
+        }
+    }
+
+    initStatus(){
+        this.LOADER.TYPE = "STATUS";
+        this.DATE_CELLS = document.querySelectorAll(`[role="gridcell"]`);
+        this.START_DATE = this.DATE_CELLS[0].getAttribute('data-date');
+        this.END_DATE = this.DATE_CELLS[this.DATE_CELLS.length - 1].getAttribute('data-date');
+        this.STATUS_RESULT = {};
+        let location = this.getLocatoin();
+        
+        this.STATUS_LIST.forEach( target => {
+            let url = `${target}/${location.city}/${location.town}/${this.START_DATE}/${this.END_DATE}`;
+            this.LOADER.addLoader(new Loader(url));
+        });
+
+        this.DATE_CELLS.forEach( cell => {
+            this.STATUS_RESULT[cell.getAttribute('data-date')] = [];
+        });
+    }
+
+    loadStatus(){
+
+        let location = this.getLocatoin();
+
+        this.STATUS_LIST.forEach( target => {
+            let url = `${target}/${location.city}/${location.town}/${this.START_DATE}/${this.END_DATE}`;
+            this.LOADER.getLoaderData(url).data.forEach(data => {
+                this.STATUS_RESULT[data.datetime.split(' ')[0]].push({
+                    target: target,
+                    data: data
+                });
+            });
+        });
+
+        this.DATE_CELLS.forEach( cell => {
+            let date = cell.getAttribute('data-date');
+
+            let statusField = document.createElement('div');
+            statusField.classList.add('position-relative');
+            
+            this.STATUS_RESULT[date].forEach( status => {
+                let statusDiv = document.createElement('div');
+                statusDiv.classList.add('d-flex');
+
+                statusDiv.innerHTML = this.createStatus(status);
+
+                statusField.appendChild(statusDiv);
+            });
+
+            
+            cell.appendChild(statusField);
+            statusField.style.top = - statusField.getBoundingClientRect().height + 'px';
+        });
+
+    }
+
+    getLocatoin(){
+
+        let location = getCookie('location') || {
+            city: '臺北市',
+            town: '中山區'
+        };
+
+        return JSON.parse(location);
+    }
+
+    createStatus(status){
+        
+        if (status.target == 'MoonriseMoonsetTime'){
+            return `
+                <img src="./img/status/moonrise.png" width="30" height="30">
+                <div class="mx-2" style="font-size:10px">
+                    <div>
+                        ${status.data.rise_time}
+                    </div>
+                    <div>
+                        ${status.data.set_time}
+                    </div>
+                </div>
+            `
+        }
+
+        if (status.target == 'SunriseSunsetTime'){
+            return `
+                <img src="./img/status/sunrise.png" width="30" height="30">
+                <div class="mx-2" style="font-size:10px">
+                    <div>
+                        ${status.data.rise_time}
+                    </div>
+                    <div>
+                        ${status.data.set_time}
+                    </div>
+                </div>
+            `
+        }
+
+        if (status.target == 'UV'){
+            // console.log(status);
+            // return `
+            //     UV: ${status.data.UVindex} -> ${status.data.UVdisplay}
+            // `
+
+            let index = status.data.UVindex;
+
+            if (index > 7){
+                index += 1;
+            }
+
+            // <div class="card bg-dark text-white">
+            //     <img src="..." class="card-img" alt="...">
+            //     <div class="card-img-overlay">
+            //         <h5 class="card-title">Card title</h5>
+            //         <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            //         <p class="card-text">Last updated 3 mins ago</p>
+            //     </div>
+            // </div>
+            
+            return `
+            <div class="d-flex flex-column">
+                <span class="position-relative top-50 left-50">
+                    ${status.data.UVindex}
+                </span>
+                <img src="./img/status/uv${Math.ceil(index/3)}.png" width="30" height="30">
+            </div>
+            `
         }
     }
 
