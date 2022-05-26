@@ -15,71 +15,85 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="d-flex vw-100 vh-100 justify-content-center align-items-center">
-        <div class="fade show" id="setting-modal" tabindex="-1" aria-labelledby="setting-modal-label" aria-hidden="true">
-            <div class="h-100 d-flex justify-content-center align-items-center">        
-                <div class="modal-dialog" style="max-width: 700px;">
-                    <div class="modal-content">
-        
-                        <div class="modal-header">
-                            <h5 class="modal-title text-center fw-bold w-100" id="setting-modal-label">
-                                請告訴我們您是哪種人吧！
-                            </h5>
-                        </div>
-                        <div class="modal-body">
-                            <div class="d-flex justify-content-around">
-                                <div class="setting-select-area" style="background-color: #EDFBE6;">
-                                    <h4 class="fw-bold">
-                                        通勤人
-                                    </h4>
-                                    雨量 <br>
-                                    <img class="mt-3" src="./img/setting/bus.png" alt="bus" height="100px" width="100px">
-                                </div>
-                                <div class="setting-select-area text-white" style="background-color: #525665;">
-                                    <h4 class="fw-bold">
-                                        吸血鬼
-                                    </h4>
-                                    紫外線 <br>
-                                    <img class="mt-3"  src="./img/setting/needle.png" alt="needle" height="100px" width="100px">
-                                </div>
-                                <div class="setting-select-area" style="background-color: #CEDEFE;">
-                                    <h4 class="fw-bold">
-                                        天文人
-                                    </h4>
-                                    月亮、雲相 <br>
-                                    <img class="mt-3"  src="./img/setting/telescope.png" alt="telescope" height="100px" width="100px">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="w-75 d-flex">
-                                <select id="setting-city" class="form-select form-select-sm me-3" aria-label=".form-select-sm city">
-                                    <option selected>縣、市</option>
-                                </select>
-                                <select id="setting-town" class="form-select form-select-sm mx-2" aria-label=".form-select-sm town">
-                                    <option selected>鄉、鎮、市</option>
-                                </select>
-                            </div>
-                            <button type="button" class="btn btn-success" onclick="checkSetting(this);">Save changes</button>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-        <!-- Temperature Modal -->
-        <div class="modal fade d-none d-flex w-100 h-100 justify-content-center align-items-center" id="TempModal" tabindex="-1" aria-labelledby="tempModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <img src="./img/temperature.png" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
 
+    <!-- Modal -->
+    <div class="fade show vh-100 vw-100" id="setting-modal" tabindex="-1" aria-labelledby="setting-modal-label" aria-hidden="true">
+        <div class="h-100 d-flex justify-content-center align-items-center">        
+            <div class="modal-dialog" style="max-width: 700px;">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title text-center fw-bold w-100" id="setting-modal-label">
+                            請告訴我們您是哪種人吧！
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-around">
+                            <div class="setting-select-area" style="background-color: #EDFBE6;" role="['PrecipitationProbabilityAll']" onclick="setRole(this);">
+                                <h4 class="fw-bold">
+                                    通勤人
+                                </h4>
+                                降雨機率 <br>
+                                <img class="mt-3" src="./img/setting/bus.png" alt="bus" height="100px" width="100px">
+                            </div>
+                            <div class="setting-select-area text-white" style="background-color: #525665;" role="['UV']" onclick="setRole(this);">
+                                <h4 class="fw-bold">
+                                    吸血鬼
+                                </h4>
+                                紫外線 <br>
+                                <img class="mt-3"  src="./img/setting/needle.png" alt="needle" height="100px" width="100px">
+                            </div>
+                            <div class="setting-select-area" style="background-color: #CEDEFE;" role="['MoonriseMoonsetTime', 'SunriseSunsetTime']" onclick="setRole(this);">
+                                <h4 class="fw-bold">
+                                    天文人
+                                </h4>
+                                日出日落 <br>
+                                月出月落 <br>
+                                <img class="mt-3"  src="./img/setting/telescope.png" alt="telescope" height="100px" width="100px">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="w-75 d-flex">
+                            <select id="setting-city" class="form-select form-select-sm me-3" aria-label=".form-select-sm city">
+                                <option selected>縣、市</option>
+                            </select>
+                            <select id="setting-town" class="form-select form-select-sm mx-2" aria-label=".form-select-sm town">
+                                <option selected>鄉、鎮、市</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-success" onclick="checkSetting(this);">Save changes</button>
+                    </div>
+
+
+                    
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Warning</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                你必須要設定一類人與初始鄉鎮縣市
+            </div>
+        </div>
+    </div>
+
+    <!-- Temperature Modal -->
+    <!-- <div class="modal fade d-none d-flex w-100 h-100 justify-content-center align-items-center" id="TempModal" tabindex="-1" aria-labelledby="tempModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="./img/temperature.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div> -->
 
     <script src="./js/setting.js"></script>
     <script>

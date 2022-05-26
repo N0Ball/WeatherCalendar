@@ -244,6 +244,7 @@ class Calendar{
 
         this.LOADING = document.getElementById('loading');
         this.LOADING.classList.remove('d-none');
+        this.FILTERS = JSON.parse(getCookie('role'));
 
         this.LOADER.TYPE = "STATUS";
         this.DATE_CELLS = document.querySelectorAll(`[role="gridcell"]`);
@@ -286,13 +287,17 @@ class Calendar{
             storedDiv.classList.add('position-absolute');
             storedDiv.style.left = cell.getBoundingClientRect().width - 30 + 'px';
             storedDiv.style.top = '7px';
+
+            let filters = JSON.parse(getCookie('role')).role;
             
             this.STATUS_RESULT[date].forEach( status => {
                 let statusDiv = document.createElement('div');
                 statusDiv.classList.add('d-flex');
 
-                statusDiv.innerHTML = this.createStatus(status);
-
+                if (filters.includes(status.target) || status.target == 'WeatherIconAll'){
+                    statusDiv.innerHTML = this.createStatus(status);
+                }
+                
                 if (status.target == 'WeatherIconAll'){
                     storedDiv.innerHTML = statusDiv.innerHTML;
                 }else{

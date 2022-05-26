@@ -70,6 +70,10 @@
     <script src="./js/setting.js"></script>
     <script>
 
+        if (getCookie('location') == null || getCookie('role') == null){
+            window.location.href = 'choose.html';
+        };
+        
         class IndexLoaderManager extends LoaderManager{
             postLoad(){
                 loadSetting();
@@ -78,10 +82,10 @@
 
         const manager = new IndexLoaderManager();
         manager.addLoader(new Includer('settingModal'));
-
+        
         const calendar = new Calendar();
         calendar.addEvent();
-
+        
     </script>
 
 </body>

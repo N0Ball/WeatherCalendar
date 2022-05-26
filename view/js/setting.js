@@ -1,3 +1,5 @@
+let SETTING_SELECT_AREAS = undefined;
+
 class Setting{
 
     constructor(){
@@ -6,12 +8,34 @@ class Setting{
 
         this.SETTING_CITY_FIELD = undefined;
         this.SETTING_TOWN_FIELD = undefined;
+
+        this.LOCATION = null;
+        this.ROLE = null;
     }
 
     update(){
         
         this.SETTING_CITY_FIELD.innerHTML = '<option>縣、市</option>';
         this.SETTING_TOWN_FIELD.innerHTML = '<option>鄉、鎮、市</option>';
+
+        this.LOCATION = JSON.parse(getCookie('location'));
+        this.ROLE = JSON.parse(getCookie('role'));
+
+        SETTING_SELECT_AREAS = document.querySelectorAll('.setting-select-area');
+        
+        if (this.ROLE != null){
+            SETTING_SELECT_AREAS.forEach( area => {
+                
+                if (area.getAttribute('role') == this.ROLE.role){
+                    setRole(area);
+                }
+    
+            })
+        }
+
+        if (this.LOCATION != null){
+            this.SELECTED = this.LOCATION.city;
+        }
 
         for (const [city, towns] of Object.entries(this.CITY_DATA)){
             
@@ -22,6 +46,14 @@ class Setting{
                 `;
 
                 towns.forEach( town => {
+
+                    if (this.LOCATION != null){
+                        this.SETTING_TOWN_FIELD.innerHTML += `
+                            <option value="${town}" selected>${town}</option>
+                        `
+                        return;
+                    }
+
                     this.SETTING_TOWN_FIELD.innerHTML += `
                     <option value="${town}">${town}</option>
                     `
@@ -80,20 +112,16 @@ function loadSetting(){
     settingLoaderManager.addLoader(new Loader('city'));
 }
 
-function updateTown(city){
-    console.log(city.value);
-}
 
 function checkSetting(target){
 
-    if (getCookie('location') != null){
+    if (getCookie('location') != null || getCookie('role') != null){
 
         if (window.location.href.split('/').pop() == 'choose.html'){
             target.setAttribute('data-bs-toggle', "modal");
             target.setAttribute('data-bs-target', "#TempModal");
-            document.getElementById('TempModal').classList.remove('d-none');
-            // window.location.href = './';
-            target.click();
+            // document.getElementById('TempModal').classList.remove('d-none');
+            window.location.href = './';
             return;
         }
 
@@ -104,6 +132,27 @@ function checkSetting(target){
 
     }
 
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function (toastEl) {
+        return new bootstrap.Toast(toastEl, delay="500");
+    })
 
+    toastList[0].show();
 
+}
+
+function setRole(target){
+    clearSelect();
+    setCookie('role', JSON.stringify({'role': target.getAttribute('role')}));
+    target.classList.add('border');
+    target.classList.add('border-3');
+    target.classList.add('border-warning');
+}
+
+function clearSelect(){
+    SETTING_SELECT_AREAS = document.querySelectorAll('.setting-select-area');
+    SETTING_SELECT_AREAS.forEach( area => {
+        area.classList.remove('border');
+        area.classList.remove('border-3'); 
+    })
 }
