@@ -362,7 +362,7 @@ class Calendar{
         if (status.target == 'UV'){
             
             return `
-            <img src="./img/status/uv-${status.data.UVindex}.svg" width="30" height="30">
+            <img src="./img/status/sun${status.data.UVindex}.png" width="30" height="30">
             `;
         }
 
