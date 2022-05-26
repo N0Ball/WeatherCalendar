@@ -13,28 +13,30 @@ class Setting{
         this.ROLE = null;
     }
 
-    update(){
+    update(init=true){
         
         this.SETTING_CITY_FIELD.innerHTML = '<option>縣、市</option>';
         this.SETTING_TOWN_FIELD.innerHTML = '<option>鄉、鎮、市</option>';
 
-        this.LOCATION = JSON.parse(getCookie('location'));
-        this.ROLE = JSON.parse(getCookie('role'));
-
-        SETTING_SELECT_AREAS = document.querySelectorAll('.setting-select-area');
-        
-        if (this.ROLE != null){
-            SETTING_SELECT_AREAS.forEach( area => {
-                
-                if (area.getAttribute('role') == this.ROLE.role){
-                    setRole(area);
-                }
+        if (init == true){
+            this.LOCATION = JSON.parse(getCookie('location'));
+            this.ROLE = JSON.parse(getCookie('role'));
     
-            })
-        }
-
-        if (this.LOCATION != null){
-            this.SELECTED = this.LOCATION.city;
+            SETTING_SELECT_AREAS = document.querySelectorAll('.setting-select-area');
+            
+            if (this.ROLE != null){
+                SETTING_SELECT_AREAS.forEach( area => {
+                    
+                    if (area.getAttribute('role') == this.ROLE.role){
+                        setRole(area);
+                    }
+        
+                })
+            }
+    
+            if (this.LOCATION != null){
+                this.SELECTED = this.LOCATION.city;
+            }
         }
 
         for (const [city, towns] of Object.entries(this.CITY_DATA)){
@@ -74,7 +76,7 @@ class Setting{
 
         this.SETTING_CITY_FIELD.onchange = () => {
             this.SELECTED = this.SETTING_CITY_FIELD.value;
-            this.update();
+            this.update(false);
         }
 
         this.SETTING_TOWN_FIELD.onchange = () => {
