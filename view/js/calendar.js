@@ -119,7 +119,9 @@ class Calendar{
                             <span class="float-end">
                                 ${this.INFO.event.extendedProps.maxTemperature}°C/${this.INFO.event.extendedProps.minTemperature}°C
                             </span>
-                            ${iconsHTML}
+                            <div style="max-height: 200px; overflow-y: scroll">
+                                ${iconsHTML}
+                            </div>
                         </div>
                         <div id="modal-detail">
                             <i class="bi bi-list"></i>

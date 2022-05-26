@@ -115,7 +115,7 @@ function loadSetting(){
 
 function checkSetting(target){
 
-    if (getCookie('location') != null || getCookie('role') != null){
+    if (getCookie('location') != null && getCookie('role') != null){
 
         if (window.location.href.split('/').pop() == 'choose.html'){
             target.setAttribute('data-bs-toggle', "modal");
