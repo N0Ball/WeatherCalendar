@@ -1,4 +1,4 @@
-let requestURL = 'https://api.dos.phy.ncu.edu.tw/cal';
+let filter = "OUO";
 
 const eventModal = document.getElementById('event-modal');
 const eventModalCard = document.getElementById('event-modal-card');
@@ -287,12 +287,13 @@ class Calendar{
             let storedDiv = document.createElement('div');
             statusField.classList.add('position-relative');
             storedDiv.classList.add('position-absolute');
-            storedDiv.style.left = cell.getBoundingClientRect().width - 30 + 'px';
+            storedDiv.style.left = cell.getBoundingClientRect().width - 45 + 'px';
             storedDiv.style.top = '7px';
 
             let filters = JSON.parse(getCookie('role')).role;
             
             this.STATUS_RESULT[date].forEach( status => {
+                cell.setAttribute(status.target, JSON.stringify(status.data));
                 let statusDiv = document.createElement('div');
                 statusDiv.classList.add('d-flex');
 
@@ -333,8 +334,8 @@ class Calendar{
         
         if (status.target == 'MoonriseMoonsetTime'){
             return `
-                <img src="./img/status/moonrise.png" width="30" height="30">
-                <div class="mx-2" style="font-size:10px">
+                <img src="./img/status/moonrise.png" width="25" height="25">
+                <div class="mx-2" style="font-size:7px">
                     <div>
                         ${status.data.rise_time}
                     </div>
@@ -347,8 +348,8 @@ class Calendar{
 
         if (status.target == 'SunriseSunsetTime'){
             return `
-                <img src="./img/status/sunrise.png" width="30" height="30">
-                <div class="mx-2" style="font-size:10px">
+                <img src="./img/status/sunrise.png" width="25" height="25">
+                <div class="mx-2" style="font-size:7px">
                     <div>
                         ${status.data.rise_time}
                     </div>
@@ -362,14 +363,14 @@ class Calendar{
         if (status.target == 'UV'){
             
             return `
-            <img src="./img/status/sun${status.data.UVindex}.png" width="30" height="30">
+            <img src="./img/status/sun${status.data.UVindex}.png" width="25" height="25">
             `;
         }
 
         if (status.target == 'WeatherIconAll'){
 
             return `
-            <img src="${status.data.urls}" width="15" height="15">
+            <img src="${status.data.urls}" width="25" height="25">
             `;
         }
 
@@ -379,7 +380,7 @@ class Calendar{
             }
 
             return `
-            <img src="./img/status/water.png" width="30" height="30">
+            <img src="./img/status/water.png" width="25" height="25">
             <spam class="mx-2 mt-2" style="font-size: .75rem">
                 ${status.data.values}%
             </spam>
@@ -393,4 +394,49 @@ class Calendar{
 
 function disableEventModal() {
     eventModal.classList.add('d-none');
+}
+
+const FILTER_LIST = {
+    'moonWatching': false,
+    'activity': false
+};
+
+function filterUpdate(target) {
+    let dates = document.querySelectorAll(`[role="gridcell"]`);
+    let statusList = ['MoonriseMoonsetTime', 'SunriseSunsetTime', 'WeatherIconAll', 'UV', 'PrecipitationProbabilityAll'];
+    
+    FILTER_LIST[target.value] = ! FILTER_LIST[target.value];
+
+    dates.forEach( date => {
+        statusList.forEach( status => {
+
+            dateStatus = JSON.parse(date.getAttribute(status.toLowerCase()));
+            date.classList.remove('bg-white');
+            date.classList.add('bg-secondary');
+            
+            if (FILTER_LIST[target.value] == false && FILTER_LIST[target.value] == false){
+                date.classList.add('bg-white');
+                date.classList.remove('bg-secondary');
+            }
+
+            if (target.value == 'moonWatching' && FILTER_LIST[target.value] == true){
+                try {
+                    if(parseInt(dateStatus.urls.split('/').pop().split('.')[0]) < 4){
+                        date.classList.remove('bg-secondary');
+                        date.classList.add('bg-white');
+                    }
+                } catch (error) {}
+            }
+
+            if (target.value == 'activity' && FILTER_LIST[target.value] == true){
+                try {
+                    if (parseInt(dateStatus.values) <= 20){
+                        date.classList.remove('bg-secondary');
+                        date.classList.add('bg-white');
+                    }
+                } catch (error) {}
+            }
+
+        })
+    })
 }
