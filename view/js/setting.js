@@ -107,7 +107,7 @@ class SettingLoaderManager extends LoaderManager{
 
 function loadSetting(){
     SETTING_MODAL_BUTTON = document.getElementById('setting-modal-button');
-    SETTING_MODAL = document.getElementById('setting-modal-button');
+    SETTING_MODAL = document.getElementById('setting-modal');
     const settingLoaderManager = new SettingLoaderManager(new Setting());
     settingLoaderManager.addLoader(new Loader('city'));
 }
@@ -120,8 +120,11 @@ function checkSetting(target){
         if (window.location.href.split('/').pop() == 'choose.html'){
             target.setAttribute('data-bs-toggle', "modal");
             target.setAttribute('data-bs-target', "#TempModal");
-            // document.getElementById('TempModal').classList.remove('d-none');
-            window.location.href = './';
+            document.getElementById('TempModal').classList.remove('d-none');
+            // window.location.href = './';
+            target.setAttribute('data-bs-dismiss', 'modal');
+            target.click();
+            SETTING_MODAL.style.display = "none";
             return;
         }
 
