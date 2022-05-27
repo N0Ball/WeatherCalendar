@@ -15,6 +15,15 @@ class Temperature:
         self.elementName = "elementName=T"
 
     def get(self, city:str, town:str, start_time:str, end_time:str):
+
+        if 'T' not in start_time:
+            start_time += 'T00:00:00+08:00'
+
+        if 'T' not in end_time:
+            end_time += 'T00:00:00+08:00'
+
+        start_time = self.UTC2LST(start_time[:19], start_time[19:])
+        end_time = self.UTC2LST(end_time[:19], end_time[19:])
         
         self.url = self._get_target_url(city, town, start_time, end_time)
         self.REQUEST_URL = RequestURL()
@@ -33,12 +42,6 @@ class Temperature:
         return json.dumps({'max': 27.0, 'min': 20.0})
 
     def _get_target_url(self, city, town, start_time, end_time):
-
-        if ':' not in start_time:
-            start_time += 'T00:00:00'
-
-        if ':' not in end_time:
-            end_time += 'T00:00:00'
 
         T_diff = self.__T_diff(end_time)
         productID = CWB.productIdGet(city, T_diff)
@@ -77,3 +80,10 @@ class Temperature:
         T0 = datetime.now()
         T2 = datetime(int(TS[0:4]), int(TS[5:7]), int(TS[8:10]))
         return (T2 - T0)/timedelta(hours=1)
+
+    def UTC2LST(self, time: str, stamp: str):
+        
+        UTC = datetime.fromisoformat(time)
+        dT = timedelta(hours=abs(int(stamp[1:3])-8))
+        LST = UTC + dT
+        return LST.strftime("%Y-%m-%dT%H:%M:%S")

@@ -27,8 +27,8 @@ def index():
             end = str(event.end)[:10]
 
         else:
-            begin = str(event.begin)[:-6]
-            end = str(event.end)[:-6]
+            begin = str(event.begin)
+            end = str(event.end)
 
         results.append({
             'DTSTART': begin,
