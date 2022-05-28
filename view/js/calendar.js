@@ -421,7 +421,7 @@ function filterUpdate(target) {
 
             if (target.value == 'moonWatching' && FILTER_LIST[target.value] == true){
                 try {
-                    if(parseInt(dateStatus.urls.split('/').pop().split('.')[0]) < 4){
+                    if(parseInt(dateStatus.urls.split('/').pop().split('.')[0]) < 8){
                         date.classList.remove('bg-secondary');
                         date.classList.add('bg-white');
                     }
